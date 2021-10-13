@@ -12,6 +12,7 @@
         <module>annotation-processing</module>
         <module>main</module>
         <module>sensitive</module>
+        <module>sonar</module>
     </modules>
 
     <properties>

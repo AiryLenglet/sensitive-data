@@ -1,0 +1,13 @@
+{
+  "title": "SensitiveString should be created from sensitive data",
+  "type": "Bug",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "status": "ready",
+  "tags": [
+    "sensitive"
+  ],
+  "defaultSeverity": "Critical"
+}

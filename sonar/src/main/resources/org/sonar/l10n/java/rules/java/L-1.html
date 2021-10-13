@@ -1,0 +1,30 @@
+<p>SensitiveString should be created from @Sensitive annotated data</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+class Dto {
+
+  private String value;
+
+  public String getValue() {
+    return this.value;
+  }
+}
+
+final var dto = new Dto();
+new SensitiveString(dto.getValue());  // Noncompliant; SensitiveString is produced with non Sensitive data
+</pre>
+<h2>Compliant Code Example</h2>
+<pre>
+class Dto {
+
+  private String value;
+
+  @Sensitive
+  public String getValue() {
+    return this.value;
+  }
+}
+
+final var dto = new Dto();
+new SensitiveString(dto.getValue());  // Compliant
+</pre>
