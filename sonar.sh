@@ -1,0 +1,1 @@
+mvn verify sonar:sonar   -Dsonar.projectKey=test   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=a6543215174a7690dc712b685fb696ddbe10c4cf -Dsonar.java.binaries=target/classes
