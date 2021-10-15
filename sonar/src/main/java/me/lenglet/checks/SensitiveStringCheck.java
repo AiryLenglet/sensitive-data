@@ -1,5 +1,6 @@
 package me.lenglet.checks;
 
+import me.lenglet.Sensitive;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -15,8 +16,8 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.NEW_CLASS;
 @Rule(key = "L-1")
 public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
 
-  private static final String FULLY_QUALIFIED_TARGET = "me.lenglet.sensitive.SensitiveString";
-  private static final String FULLY_QUALIFIED_ANNOTATION = "me.lenglet.sensitive.Sensitive";
+  private static final String FULLY_QUALIFIED_TARGET = "me.lenglet.SensitiveString";
+  private static final String FULLY_QUALIFIED_ANNOTATION = Sensitive.class.getTypeName();
 
   @Override
   public List<Kind> nodesToVisit() {

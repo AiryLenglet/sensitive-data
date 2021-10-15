@@ -42,6 +42,11 @@
             <version>1.14.1.690</version>
         </dependency>
 
+        <dependency>
+            <groupId>me.lenglet</groupId>
+            <artifactId>sensitive</artifactId>
+        </dependency>
+
         <!-- TEST sources dependencies -->
         <dependency>
             <groupId>org.sonarsource.java</groupId>
