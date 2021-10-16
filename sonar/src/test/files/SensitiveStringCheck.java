@@ -72,6 +72,15 @@ public static class Dto extends ParentDto {
     public String getValue3() {
         return value3;
     }
+
+    public void setValue1(String value1) {
+        this.value1 = value1;
+    }
+
+    public void setValue2(String value2) {
+        this.value2 = value2;
+    }
+
 }
 
 public static record Record(
@@ -93,6 +102,7 @@ public static class Util {
 class MyClass {
 
     public void doSomething() {
+
         final var wrapper = new WrapperDto();
         new SensitiveString(wrapper.getNested().value2()); // Noncompliant
         new SensitiveString(wrapper.getNested().value1()); // Compliant
@@ -100,11 +110,16 @@ class MyClass {
         new SensitiveString(Util.fromSensitiveString(null));
         final var ss = Util.fromSensitiveString(null);
 
-        final var v = new Dto();
+        final var dto = new Dto();
+        final var dto2 = new Dto();
 
-        Util.fromString(v.value2()); // Noncompliant
-        Util.fromString(v.getValue3());
-        Util.fromString(v.value1());
+        dto2.setValue2(dto.value1()); // Noncompliant
+        dto2.setValue1(dto.value2()); // Noncompliant
+        dto2.setValue1(dto.value1()); // Compliant
+
+        Util.fromString(dto.value2()); // Noncompliant
+        Util.fromString(dto.getValue3());
+        Util.fromString(dto.value1());
         Util.fromString("jack"); // Noncompliant
 
         final var r = new Record("jack", "jack");
@@ -114,13 +129,14 @@ class MyClass {
         final var str = "jack";
         new SensitiveString(str); // Noncompliant
         new SensitiveString("jack"); // Noncompliant
-        new SensitiveString(v.value1());
-        new SensitiveString(v.value2()); // Noncompliant
-        new SensitiveString(v.getValue3());
-        new SensitiveString(v.getParentValue2()); // Noncompliant
-        new SensitiveString(v.getParentValue1());
+        new SensitiveString(dto.value1());
+        new SensitiveString(dto.value2()); // Noncompliant
+        new SensitiveString(dto.getValue3());
+        new SensitiveString(dto.getParentValue2()); // Noncompliant
+        new SensitiveString(dto.getParentValue1());
 
-        final var sense = v.value1();
+        final var sense = dto.value1();
         new SensitiveString(sense);
+
     }
 }
