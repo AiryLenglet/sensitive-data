@@ -1,6 +1,5 @@
 package me.lenglet.checks;
 
-import me.lenglet.Sensitive;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -11,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static me.lenglet.checks.Util.getField;
+import static me.lenglet.checks.Util.isSensitive;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
 
 @Rule(key = "L-1")
 public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
 
     private static final String FULLY_QUALIFIED_TARGET = "me.lenglet.SensitiveString";
-    private static final String FULLY_QUALIFIED_ANNOTATION = Sensitive.class.getTypeName();
 
     @Override
     public List<Kind> nodesToVisit() {
@@ -34,15 +34,6 @@ public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
         } else if (tree.is(METHOD_INVOCATION)) {
             visitMethodInvocation(tree);
         }
-    }
-
-    private boolean isSensitive(Symbol.VariableSymbol field) {
-        return field.metadata().isAnnotatedWith(FULLY_QUALIFIED_ANNOTATION);
-    }
-
-    private boolean isSensitive(Optional<Symbol.VariableSymbol> field) {
-        return field.map(this::isSensitive)
-                .orElse(false);
     }
 
     private boolean hasTreeSensitive(Tree tree) {
@@ -88,16 +79,6 @@ public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
         }
     }
 
-    private static Optional<Symbol.VariableSymbol> getField(MethodInvocationTree methodInvocationTree) {
-        String methodName = getMethodName(methodInvocationTree);
-
-        final Symbol.TypeSymbol methodClass = (Symbol.TypeSymbol) methodInvocationTree.symbol().owner();
-        return methodClass.lookupSymbols(methodName).stream()
-                .filter(Symbol::isVariableSymbol)
-                .map(s -> (Symbol.VariableSymbol) s)
-                .findFirst();
-    }
-
     private void visitNewClassTree(Tree tree) {
 
         NewClassTree newClassTree = (NewClassTree) tree;
@@ -110,7 +91,7 @@ public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
             if (expressionTree.is(METHOD_INVOCATION)) {
                 MethodInvocationTree methodInvocationTree = (MethodInvocationTree) expressionTree;
                 final Optional<Symbol.VariableSymbol> field = getField(methodInvocationTree);
-                if (field.isPresent() && !field.get().metadata().isAnnotatedWith(FULLY_QUALIFIED_ANNOTATION)) {
+                if (field.isPresent() && !isSensitive(field.get())) {
                     reportIssue(newClassTree, "SensitiveString created from non sensitive data");
                 }
 
@@ -125,15 +106,5 @@ public class SensitiveStringCheck extends IssuableSubscriptionVisitor {
                 }
             }
         }
-    }
-
-    private static String getMethodName(MethodInvocationTree methodInvocationTree) {
-        String methodName = methodInvocationTree.symbol().name();
-        if (methodName.startsWith("get") || methodName.startsWith("set")) {
-            char[] c = methodName.substring(3).toCharArray();
-            c[0] = Character.toLowerCase(c[0]);
-            methodName = new String(c);
-        }
-        return methodName;
     }
 }

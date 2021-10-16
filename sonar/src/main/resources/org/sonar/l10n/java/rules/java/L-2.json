@@ -1,0 +1,13 @@
+{
+  "title": "SensitiveString value should be used only in sensitive data",
+  "type": "Bug",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "status": "ready",
+  "tags": [
+    "sensitive"
+  ],
+  "defaultSeverity": "Critical"
+}

@@ -20,6 +20,7 @@
 package me.lenglet;
 
 import me.lenglet.checks.SensitiveStringCheck;
+import me.lenglet.checks.SensitiveStringValueCheck;
 import org.sonar.plugins.java.api.JavaCheck;
 
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public final class RulesList {
      */
     public static List<Class<? extends JavaCheck>> getJavaChecks() {
         return Collections.unmodifiableList(Arrays.asList(
-                SensitiveStringCheck.class
+                SensitiveStringCheck.class,
+                SensitiveStringValueCheck.class
         ));
     }
 
